@@ -56,7 +56,6 @@ const requestResult = document.querySelector("#requestResult");
 const requestResultTitle = document.querySelector("#requestResultTitle");
 const requestResultMessage = document.querySelector("#requestResultMessage");
 const requestText = document.querySelector("#requestText");
-const copyRequestButton = document.querySelector("#copyRequestButton");
 const sendRequestButton = document.querySelector("#sendRequestButton");
 const formStatus = document.querySelector("#formStatus");
 
@@ -248,6 +247,10 @@ function showRequestResult(title, message, body) {
   requestResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+function whatsappUrl(message) {
+  return `https://wa.me/353892721358?text=${encodeURIComponent(message)}`;
+}
+
 function handleSubmit(event) {
   if (event) {
     event.preventDefault();
@@ -261,15 +264,16 @@ function handleSubmit(event) {
   const submitButton = sendRequestButton;
 
   showRequestResult(
-    "Request ready to copy",
-    `Copy your request and send it to us on WhatsApp: ${whatsappNumber}.`,
+    "Request ready for WhatsApp",
+    "Open WhatsApp with your request ready to send.",
     rawBody
   );
-  formStatus.textContent = "Request ready to copy. Send it to us on WhatsApp so we can confirm availability.";
+  formStatus.textContent = "Opening WhatsApp with your request ready to send.";
   formStatus.className = "form-status";
   formStatus.classList.add("success");
-  submitButton.textContent = "Update Request";
+  submitButton.textContent = "Send";
   updateSummary();
+  window.open(whatsappUrl(rawBody), "_blank", "noopener");
 }
 
 renderPricing();
@@ -282,17 +286,3 @@ dateInput.addEventListener("change", updateSummary);
 timeSelect.addEventListener("change", updateSummary);
 form.addEventListener("submit", handleSubmit);
 sendRequestButton.addEventListener("click", handleSubmit);
-copyRequestButton.addEventListener("click", async () => {
-  requestText.select();
-  try {
-    await navigator.clipboard.writeText(requestText.value);
-    copyRequestButton.textContent = "Copied";
-    formStatus.textContent = `Copied. Now send it to us on WhatsApp: ${whatsappNumber}.`;
-    formStatus.className = "form-status success";
-  } catch (error) {
-    document.execCommand("copy");
-    copyRequestButton.textContent = "Copied";
-    formStatus.textContent = `Copied. Now send it to us on WhatsApp: ${whatsappNumber}.`;
-    formStatus.className = "form-status success";
-  }
-});
