@@ -174,8 +174,9 @@
             </div>
             <div class="form-row">
               <label for="date">Preferred Date</label>
-              <select id="date" name="date" required></select>
-              <small id="dateHelp">Select an available weekend.</small>
+              <input id="date" name="date" type="hidden" required>
+              <div class="booking-calendar" id="bookingCalendar"></div>
+              <small id="dateHelp">Only Saturdays and Sundays are available.</small>
             </div>
             <div class="form-row">
               <label for="time">Preferred Time</label>

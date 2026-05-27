@@ -43,13 +43,15 @@ const timeSlots = [
   "18:00"
 ];
 
-const weekendOptionCount = 16;
+let calendarCursor = new Date();
+calendarCursor.setDate(1);
 
 const pricingRows = document.querySelector("#pricingRows");
 const serviceSelect = document.querySelector("#service");
 const bedroomsSelect = document.querySelector("#bedrooms");
 const timeSelect = document.querySelector("#time");
 const dateInput = document.querySelector("#date");
+const bookingCalendar = document.querySelector("#bookingCalendar");
 const summary = document.querySelector("#bookingSummary");
 const form = document.querySelector("#bookingForm");
 const requestResult = document.querySelector("#requestResult");
@@ -83,37 +85,8 @@ function populateControls() {
     .map((slot) => `<option value="${slot}">${slot}</option>`)
     .join("");
 
-  dateInput.innerHTML = buildWeekendOptions()
-    .map((option) => `<option value="${option.value}">${option.label}</option>`)
-    .join("");
-
+  renderBookingCalendar();
   updateBedroomOptions();
-}
-
-function buildWeekendOptions() {
-  const options = [];
-  const formatter = new Intl.DateTimeFormat("en-IE", {
-    weekday: "long",
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
-  const cursor = new Date();
-  cursor.setHours(0, 0, 0, 0);
-
-  while (options.length < weekendOptionCount) {
-    const day = cursor.getDay();
-    if (day === 0 || day === 6) {
-      const value = formatDateValue(cursor);
-      options.push({
-        value,
-        label: formatter.format(cursor)
-      });
-    }
-    cursor.setDate(cursor.getDate() + 1);
-  }
-
-  return options;
 }
 
 function formatDateValue(date) {
@@ -121,6 +94,65 @@ function formatDateValue(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function renderBookingCalendar() {
+  const monthFormatter = new Intl.DateTimeFormat("en-IE", {
+    month: "long",
+    year: "numeric"
+  });
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const year = calendarCursor.getFullYear();
+  const month = calendarCursor.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const leadingBlanks = firstDay.getDay();
+  const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const cells = [];
+
+  for (let index = 0; index < leadingBlanks; index += 1) {
+    cells.push('<span class="calendar-day empty" aria-hidden="true"></span>');
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const date = new Date(year, month, day);
+    const value = formatDateValue(date);
+    const weekend = isWeekend(value);
+    const past = date < today;
+    const selected = dateInput.value === value;
+    const disabled = !weekend || past;
+    const classes = ["calendar-day"];
+
+    if (selected) {
+      classes.push("selected");
+    }
+    if (disabled) {
+      classes.push("disabled");
+    }
+
+    cells.push(`
+      <button
+        class="${classes.join(" ")}"
+        type="button"
+        data-date="${value}"
+        ${disabled ? "disabled" : ""}
+        aria-label="${value}${disabled ? " unavailable" : " available"}"
+      >${day}</button>
+    `);
+  }
+
+  bookingCalendar.innerHTML = `
+    <div class="calendar-header">
+      <button class="calendar-nav" type="button" data-calendar-nav="previous" aria-label="Previous month">&lt;</button>
+      <strong>${monthFormatter.format(calendarCursor)}</strong>
+      <button class="calendar-nav" type="button" data-calendar-nav="next" aria-label="Next month">&gt;</button>
+    </div>
+    <div class="calendar-grid">
+      ${weekdayLabels.map((label) => `<span class="calendar-weekday">${label}</span>`).join("")}
+      ${cells.join("")}
+    </div>
+  `;
 }
 
 function selectedService() {
@@ -282,6 +314,22 @@ updateSummary();
 serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
 dateInput.addEventListener("change", updateSummary);
+bookingCalendar.addEventListener("click", (event) => {
+  const navButton = event.target.closest("[data-calendar-nav]");
+  const dateButton = event.target.closest("[data-date]");
+
+  if (navButton) {
+    calendarCursor.setMonth(calendarCursor.getMonth() + (navButton.dataset.calendarNav === "next" ? 1 : -1));
+    renderBookingCalendar();
+    return;
+  }
+
+  if (dateButton && !dateButton.disabled) {
+    dateInput.value = dateButton.dataset.date;
+    renderBookingCalendar();
+    updateSummary();
+  }
+});
 timeSelect.addEventListener("change", updateSummary);
 form.addEventListener("submit", handleSubmit);
 sendRequestButton.addEventListener("click", handleSubmit);
