@@ -42,6 +42,9 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Send" "single WhatsApp send button"
     Assert-Contains $all "wa.me/353892721358" "WhatsApp message link"
     Assert-Contains $all "Open WhatsApp with your request ready to send." "WhatsApp booking instructions"
+    if ($all -like "*Please confirm availability by WhatsApp*") {
+        $failures.Add("WhatsApp request message should not include internal confirmation instruction.")
+    }
     Assert-Contains $all "Please complete the highlighted fields." "booking validation"
     Assert-Contains $all "formStatus" "visible booking status"
     Assert-Contains $all "button" "direct booking button"

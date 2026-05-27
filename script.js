@@ -222,7 +222,6 @@ function bookingBody() {
     "New Triple Cleaning booking request",
     "",
     "Status: Pending Approval",
-    `Please confirm availability by WhatsApp: ${whatsappNumber}`,
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
     `Duration: ${option.duration}`,
