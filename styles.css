@@ -393,6 +393,10 @@ li::before {
   grid-column: span 1;
 }
 
+.hidden-field {
+  display: none;
+}
+
 .form-row-full,
 .booking-summary,
 .request-result,

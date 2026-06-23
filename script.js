@@ -270,6 +270,39 @@ function bookingBody() {
   ].join("\n");
 }
 
+function bookingFields() {
+  const service = selectedService();
+  const option = selectedOption();
+  const fields = new FormData(form);
+
+  return {
+    "form-name": "booking-request",
+    status: "Pending Approval",
+    service: service.label,
+    bedrooms: option.bedrooms,
+    duration: option.duration,
+    price: option.price,
+    preferred_date: fields.get("date"),
+    preferred_time: fields.get("time"),
+    customer_name: fields.get("name"),
+    customer_email: fields.get("email"),
+    customer_phone: fields.get("phone") || "Not provided",
+    customer_address: fields.get("address"),
+    notes: fields.get("notes") || "None",
+    request_message: bookingBody()
+  };
+}
+
+async function submitBookingCopy() {
+  const body = new URLSearchParams(bookingFields());
+
+  await fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString()
+  });
+}
+
 function showRequestResult(title, message, body) {
   requestResultTitle.textContent = title;
   requestResultMessage.textContent = message;
@@ -304,6 +337,9 @@ function handleSubmit(event) {
   formStatus.classList.add("success");
   submitButton.textContent = "Send";
   updateSummary();
+  submitBookingCopy().catch(() => {
+    formStatus.textContent = "Opening WhatsApp. Email copy will be available after the site is loaded from Netlify.";
+  });
   window.open(whatsappUrl(rawBody), "_blank", "noopener");
 }
 
