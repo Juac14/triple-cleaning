@@ -3,27 +3,27 @@ const serviceCatalog = {
     label: "Standard Cleaning",
     description: "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
     options: [
-      { bedrooms: "2 Bedrooms", duration: "2 hr 30 min", price: "EUR 80" },
-      { bedrooms: "3 Bedrooms", duration: "3 hr", price: "EUR 100" },
-      { bedrooms: "4 Bedrooms", duration: "3 hr 30 min", price: "EUR 130" }
+      { bedrooms: "2 Bedrooms", price: "€ 80.00" },
+      { bedrooms: "3 Bedrooms", price: "€ 100.00" },
+      { bedrooms: "4 Bedrooms", price: "€ 130.00" }
     ]
   },
   deep: {
     label: "Deep Cleaning",
     description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
     options: [
-      { bedrooms: "2 Bedrooms", duration: "3 hr", price: "EUR 140" },
-      { bedrooms: "3 Bedrooms", duration: "3 hr 30 min", price: "EUR 160" },
-      { bedrooms: "4 Bedrooms", duration: "4 hr", price: "EUR 190" }
+      { bedrooms: "2 Bedrooms", price: "€ 140.00" },
+      { bedrooms: "3 Bedrooms", price: "€ 180.00" },
+      { bedrooms: "4 Bedrooms", price: "€ 240.00" }
     ]
   },
   move: {
     label: "Move In / Move Out Cleaning",
     description: "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
     options: [
-      { bedrooms: "2 Bedrooms", duration: "4 hr", price: "EUR 160" },
-      { bedrooms: "3 Bedrooms", duration: "5 hr", price: "EUR 210" },
-      { bedrooms: "4 Bedrooms", duration: "6 hr", price: "EUR 250" }
+      { bedrooms: "2 Bedrooms", price: "€ 300.00" },
+      { bedrooms: "3 Bedrooms", price: "€ 360.00" },
+      { bedrooms: "4 Bedrooms", price: "€ 420.00" }
     ]
   }
 };
@@ -67,7 +67,6 @@ function renderPricing() {
       <tr>
         <td>${service.label}</td>
         <td>${option.bedrooms}</td>
-        <td>${option.duration}</td>
         <td>${option.price}</td>
       </tr>
     `)
@@ -192,7 +191,7 @@ function updateSummary() {
 
   summary.innerHTML = `
     <strong>${service.label} - ${option.bedrooms}</strong>
-    <p>${option.duration} at ${option.price}</p>
+    <p>Price: ${option.price}</p>
     <p>${dateMessage}</p>
     <p>Status after sending: Pending Approval</p>
   `;
@@ -256,7 +255,6 @@ function bookingBody() {
     "Status: Pending Approval",
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
-    `Duration: ${option.duration}`,
     `Price: ${option.price}`,
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
@@ -280,7 +278,6 @@ function bookingFields() {
     status: "Pending Approval",
     service: service.label,
     bedrooms: option.bedrooms,
-    duration: option.duration,
     price: option.price,
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),

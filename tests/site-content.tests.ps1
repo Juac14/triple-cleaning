@@ -60,6 +60,9 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Sunday" "weekend availability"
     Assert-Contains $all "09:00" "start time"
     Assert-Contains $all "18:00" "end time"
+    if ($all -like "*Duration*" -or $all -like "*duration*" -or $all -like "*2 hr 30 min*" -or $all -like "*3 hr 30 min*" -or $all -like "*5 hr*" -or $all -like "*6 hr*") {
+        $failures.Add("Cleaning durations should not be visible or included in booking messages.")
+    }
 
     $requiredContent = @(
         "Standard Cleaning",
@@ -71,16 +74,15 @@ if ($failures.Count -eq 0) {
         "2 Bedrooms",
         "3 Bedrooms",
         "4 Bedrooms",
-        "2 hr 30 min",
-        "3 hr 30 min",
-        "EUR 80",
-        "EUR 100",
-        "EUR 130",
-        "EUR 140",
-        "EUR 160",
-        "EUR 190",
-        "EUR 210",
-        "EUR 250",
+        "€ 80.00",
+        "€ 100.00",
+        "€ 130.00",
+        "€ 140.00",
+        "€ 180.00",
+        "€ 240.00",
+        "€ 300.00",
+        "€ 360.00",
+        "€ 420.00",
         "Dusting all accessible surfaces",
         "Interior window cleaning",
         "Inside oven, fridge, and appliances",
