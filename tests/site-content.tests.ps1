@@ -85,6 +85,7 @@ if ($failures.Count -eq 0) {
         "€ 360.00",
         "€ 420.00",
         "Dusting all accessible surfaces",
+        "Deep cleaning of bathrooms and kitchens, including cabinets (exterior)",
         "Interior window cleaning",
         "Inside oven, fridge, and appliances",
         "Removal of construction dust"
