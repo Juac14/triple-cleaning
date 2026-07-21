@@ -5,7 +5,8 @@ const serviceCatalog = {
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 80.00" },
       { bedrooms: "3 Bedrooms", price: "€ 100.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 130.00" }
+      { bedrooms: "4 Bedrooms", price: "€ 130.00" },
+      { bedrooms: "5 Bedrooms", price: "€ 150.00" }
     ]
   },
   deep: {
@@ -14,7 +15,8 @@ const serviceCatalog = {
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 140.00" },
       { bedrooms: "3 Bedrooms", price: "€ 180.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 210.00" }
+      { bedrooms: "4 Bedrooms", price: "€ 210.00" },
+      { bedrooms: "5 Bedrooms", price: "€ 230.00" }
     ]
   },
   move: {
@@ -23,7 +25,8 @@ const serviceCatalog = {
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 300.00" },
       { bedrooms: "3 Bedrooms", price: "€ 360.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 420.00" }
+      { bedrooms: "4 Bedrooms", price: "€ 420.00" },
+      { bedrooms: "5 Bedrooms", price: "€ 480.00" }
     ]
   }
 };
