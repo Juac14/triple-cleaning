@@ -74,7 +74,7 @@ if ($failures.Count -eq 0) {
         "2 Bedrooms",
         "3 Bedrooms",
         "4 Bedrooms",
-        "Bedrooms / Office / Playroom",
+        "Bedrooms / Office / Playroom / TV Room",
         "€ 80.00",
         "€ 100.00",
         "€ 130.00",
