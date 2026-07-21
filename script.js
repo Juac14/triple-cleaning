@@ -14,7 +14,7 @@ const serviceCatalog = {
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 140.00" },
       { bedrooms: "3 Bedrooms", price: "€ 180.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 240.00" }
+      { bedrooms: "4 Bedrooms", price: "€ 210.00" }
     ]
   },
   move: {
