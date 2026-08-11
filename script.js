@@ -180,7 +180,7 @@ function bookingPrice() {
   const basePrice = Number(option.price.replace(/[^0-9.]/g, ""));
   const extraBathrooms = Math.max(Number(bathroomsSelect.value) - 2, 0);
   const extraBathroomFee = extraBathrooms * selectedService().extraBathroomFee;
-  const firstVisitFee = firstVisitInput.checked ? 30 : 0;
+  const firstVisitFee = firstVisitInput.checked && serviceSelect.value !== "move" ? 30 : 0;
 
   return {
     basePrice,
