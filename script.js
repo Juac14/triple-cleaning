@@ -2,6 +2,7 @@ const serviceCatalog = {
   standard: {
     label: "Standard Cleaning",
     description: "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
+    extraBathroomFee: 30,
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 80.00" },
       { bedrooms: "3 Bedrooms", price: "€ 100.00" },
@@ -12,6 +13,7 @@ const serviceCatalog = {
   deep: {
     label: "Deep Cleaning",
     description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
+    extraBathroomFee: 30,
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 140.00" },
       { bedrooms: "3 Bedrooms", price: "€ 180.00" },
@@ -22,6 +24,7 @@ const serviceCatalog = {
   move: {
     label: "Move In / Move Out Cleaning",
     description: "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
+    extraBathroomFee: 0,
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 300.00" },
       { bedrooms: "3 Bedrooms", price: "€ 360.00" },
@@ -73,7 +76,7 @@ function renderPricing() {
         <td>${service.label}</td>
         <td>${option.bedrooms}</td>
         <td>${option.price}</td>
-        <td>€ 30.00</td>
+        <td>${service.extraBathroomFee ? formatPrice(service.extraBathroomFee) : "—"}</td>
       </tr>
     `)
   );
@@ -176,7 +179,7 @@ function bookingPrice() {
   const option = selectedOption();
   const basePrice = Number(option.price.replace(/[^0-9.]/g, ""));
   const extraBathrooms = Math.max(Number(bathroomsSelect.value) - 2, 0);
-  const extraBathroomFee = extraBathrooms * 30;
+  const extraBathroomFee = extraBathrooms * selectedService().extraBathroomFee;
   const firstVisitFee = firstVisitInput.checked ? 30 : 0;
 
   return {

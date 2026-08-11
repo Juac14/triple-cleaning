@@ -56,7 +56,9 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all 'name="first_visit"' "first visit form value"
     Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
     Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
-    Assert-Contains $all "extraBathrooms * 30" "extra bathroom price calculation"
+    Assert-Contains $all "extraBathrooms * selectedService().extraBathroomFee" "extra bathroom price calculation"
+    Assert-Contains $all "extraBathroomFee: 30" "standard and deep extra bathroom fee"
+    Assert-Contains $all "extraBathroomFee: 0" "no extra bathroom fee for move cleaning"
     Assert-Contains $all "firstVisitInput.checked ? 30 : 0" "first visit price calculation"
     Assert-Contains $all 'Final price: ${formatPrice(price.total)}' "final booking price"
     Assert-Contains $all "formStatus" "visible booking status"
@@ -89,7 +91,6 @@ if ($failures.Count -eq 0) {
         "Additional fee per extra full bathroom",
         "Full Bathrooms",
         "This is my first visit (+€30.00)",
-        "€ 30.00",
         "€ 80.00",
         "€ 100.00",
         "€ 130.00",
