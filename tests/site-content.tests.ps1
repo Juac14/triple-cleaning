@@ -85,7 +85,7 @@ if ($failures.Count -eq 0) {
         "4 Bedrooms",
         "5 Bedrooms",
         "Bedrooms / Office / Playroom / TV Room",
-        "Price (up to 2 full bathrooms + toilet)",
+        "Price (up to 2 full bathrooms + guest toilet)",
         "Additional fee per extra full bathroom",
         "Full Bathrooms",
         "This is my first visit (+€30.00)",
