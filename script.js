@@ -53,6 +53,7 @@ const pricingRows = document.querySelector("#pricingRows");
 const serviceSelect = document.querySelector("#service");
 const bedroomsSelect = document.querySelector("#bedrooms");
 const bathroomsSelect = document.querySelector("#bathrooms");
+const firstVisitInput = document.querySelector("#firstVisit");
 const timeSelect = document.querySelector("#time");
 const dateInput = document.querySelector("#date");
 const bookingCalendar = document.querySelector("#bookingCalendar");
@@ -167,6 +168,26 @@ function selectedOption() {
   return selectedService().options.find((option) => option.bedrooms === bedroomsSelect.value);
 }
 
+function formatPrice(value) {
+  return `€ ${value.toFixed(2)}`;
+}
+
+function bookingPrice() {
+  const option = selectedOption();
+  const basePrice = Number(option.price.replace(/[^0-9.]/g, ""));
+  const extraBathrooms = Math.max(Number(bathroomsSelect.value) - 2, 0);
+  const extraBathroomFee = extraBathrooms * 30;
+  const firstVisitFee = firstVisitInput.checked ? 30 : 0;
+
+  return {
+    basePrice,
+    extraBathrooms,
+    extraBathroomFee,
+    firstVisitFee,
+    total: basePrice + extraBathroomFee + firstVisitFee
+  };
+}
+
 function updateBedroomOptions() {
   bedroomsSelect.innerHTML = selectedService().options
     .map((option) => `<option value="${option.bedrooms}">${option.bedrooms}</option>`)
@@ -187,6 +208,7 @@ function isWeekend(dateValue) {
 function updateSummary() {
   const service = selectedService();
   const option = selectedOption();
+  const price = bookingPrice();
   const dateValue = dateInput.value;
   const dateMessage = dateValue
     ? isWeekend(dateValue)
@@ -196,8 +218,11 @@ function updateSummary() {
 
   summary.innerHTML = `
     <strong>${service.label} - ${option.bedrooms}</strong>
-    <p>Price: ${option.price}</p>
     <p>Full bathrooms: ${bathroomsSelect.value}</p>
+    <p>Base price: ${formatPrice(price.basePrice)}</p>
+    ${price.extraBathroomFee ? `<p>Extra bathroom fee (${price.extraBathrooms}): ${formatPrice(price.extraBathroomFee)}</p>` : ""}
+    ${price.firstVisitFee ? `<p>First visit fee: ${formatPrice(price.firstVisitFee)}</p>` : ""}
+    <p><strong>Final price: ${formatPrice(price.total)}</strong></p>
     <p>${dateMessage}</p>
     <p>Status after sending: Pending Approval</p>
   `;
@@ -253,6 +278,7 @@ function validateBookingForm() {
 function bookingBody() {
   const service = selectedService();
   const option = selectedOption();
+  const price = bookingPrice();
   const fields = new FormData(form);
 
   return [
@@ -262,7 +288,11 @@ function bookingBody() {
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
     `Full bathrooms: ${fields.get("bathrooms")}`,
-    `Price: ${option.price}`,
+    `Base price: ${formatPrice(price.basePrice)}`,
+    `Extra bathroom fee: ${formatPrice(price.extraBathroomFee)}`,
+    `First visit: ${firstVisitInput.checked ? "Yes" : "No"}`,
+    `First visit fee: ${formatPrice(price.firstVisitFee)}`,
+    `Final price: ${formatPrice(price.total)}`,
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
     "",
@@ -278,6 +308,7 @@ function bookingBody() {
 function bookingFields() {
   const service = selectedService();
   const option = selectedOption();
+  const price = bookingPrice();
   const fields = new FormData(form);
 
   return {
@@ -286,7 +317,11 @@ function bookingFields() {
     service: service.label,
     bedrooms: option.bedrooms,
     full_bathrooms: fields.get("bathrooms"),
-    price: option.price,
+    base_price: formatPrice(price.basePrice),
+    extra_bathroom_fee: formatPrice(price.extraBathroomFee),
+    first_visit: firstVisitInput.checked ? "Yes" : "No",
+    first_visit_fee: formatPrice(price.firstVisitFee),
+    price: formatPrice(price.total),
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
     customer_name: fields.get("name"),
@@ -355,6 +390,7 @@ updateSummary();
 serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
 bathroomsSelect.addEventListener("change", updateSummary);
+firstVisitInput.addEventListener("change", updateSummary);
 dateInput.addEventListener("change", updateSummary);
 bookingCalendar.addEventListener("click", (event) => {
   const navButton = event.target.closest("[data-calendar-nav]");
