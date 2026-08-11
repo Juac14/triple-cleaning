@@ -64,6 +64,11 @@ const requestText = document.querySelector("#requestText");
 const sendRequestButton = document.querySelector("#sendRequestButton");
 const formStatus = document.querySelector("#formStatus");
 
+function addExtraBathroomFee(price) {
+  const numericPrice = Number(price.replace(/[^0-9.]/g, ""));
+  return `€ ${(numericPrice + 30).toFixed(2)}`;
+}
+
 function renderPricing() {
   const rows = Object.values(serviceCatalog).flatMap((service) =>
     service.options.map((option) => `
@@ -71,6 +76,7 @@ function renderPricing() {
         <td>${service.label}</td>
         <td>${option.bedrooms}</td>
         <td>${option.price}</td>
+        <td>${addExtraBathroomFee(option.price)}</td>
       </tr>
     `)
   );
