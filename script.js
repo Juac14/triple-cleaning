@@ -52,6 +52,7 @@ calendarCursor.setDate(1);
 const pricingRows = document.querySelector("#pricingRows");
 const serviceSelect = document.querySelector("#service");
 const bedroomsSelect = document.querySelector("#bedrooms");
+const bathroomsSelect = document.querySelector("#bathrooms");
 const timeSelect = document.querySelector("#time");
 const dateInput = document.querySelector("#date");
 const bookingCalendar = document.querySelector("#bookingCalendar");
@@ -196,6 +197,7 @@ function updateSummary() {
   summary.innerHTML = `
     <strong>${service.label} - ${option.bedrooms}</strong>
     <p>Price: ${option.price}</p>
+    <p>Full bathrooms: ${bathroomsSelect.value}</p>
     <p>${dateMessage}</p>
     <p>Status after sending: Pending Approval</p>
   `;
@@ -259,6 +261,7 @@ function bookingBody() {
     "Status: Pending Approval",
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
+    `Full bathrooms: ${fields.get("bathrooms")}`,
     `Price: ${option.price}`,
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
@@ -282,6 +285,7 @@ function bookingFields() {
     status: "Pending Approval",
     service: service.label,
     bedrooms: option.bedrooms,
+    full_bathrooms: fields.get("bathrooms"),
     price: option.price,
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
@@ -350,6 +354,7 @@ updateSummary();
 
 serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
+bathroomsSelect.addEventListener("change", updateSummary);
 dateInput.addEventListener("change", updateSummary);
 bookingCalendar.addEventListener("click", (event) => {
   const navButton = event.target.closest("[data-calendar-nav]");

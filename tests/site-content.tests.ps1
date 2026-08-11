@@ -50,6 +50,10 @@ if ($failures.Count -eq 0) {
         $failures.Add("WhatsApp request message should not include internal confirmation instruction.")
     }
     Assert-Contains $all "Please complete the highlighted fields." "booking validation"
+    Assert-Contains $all 'id="bathrooms"' "full bathrooms field"
+    Assert-Contains $all 'name="bathrooms"' "full bathrooms form value"
+    Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
+    Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
     Assert-Contains $all "formStatus" "visible booking status"
     Assert-Contains $all "button" "direct booking button"
     Assert-Contains $all "renderBookingCalendar" "weekend calendar rendering"
@@ -78,6 +82,7 @@ if ($failures.Count -eq 0) {
         "Bedrooms / Office / Playroom / TV Room",
         "Price (up to 2 full bathrooms)",
         "Additional fee per extra full bathroom",
+        "Full Bathrooms",
         "€ 30.00",
         "€ 80.00",
         "€ 100.00",
