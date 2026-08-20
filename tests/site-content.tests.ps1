@@ -59,7 +59,9 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "extraBathrooms * selectedService().extraBathroomFee" "extra bathroom price calculation"
     Assert-Contains $all "extraBathroomFee: 30" "standard and deep extra bathroom fee"
     Assert-Contains $all "extraBathroomFee: 0" "no extra bathroom fee for move cleaning"
-    Assert-Contains $all 'firstVisitInput.checked && serviceSelect.value !== "move" ? 30 : 0' "first visit price calculation"
+    if ($all -like '*firstVisitFee*' -or $all -like '*First visit fee*') {
+        $failures.Add("First visits should not add a fee.")
+    }
     Assert-Contains $all 'Final price: ${formatPrice(price.total)}' "final booking price"
     Assert-Contains $all "formStatus" "visible booking status"
     Assert-Contains $all "button" "direct booking button"
@@ -71,9 +73,7 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Sunday" "weekend availability"
     Assert-Contains $all "09:00" "start time"
     Assert-Contains $all "18:00" "end time"
-    if ($all -like "*Duration*" -or $all -like "*duration*" -or $all -like "*2 hr 30 min*" -or $all -like "*3 hr 30 min*" -or $all -like "*5 hr*" -or $all -like "*6 hr*") {
-        $failures.Add("Cleaning durations should not be visible or included in booking messages.")
-    }
+    Assert-Contains $all "Estimated time" "estimated time table heading"
 
     $requiredContent = @(
         "Standard Cleaning",
@@ -88,9 +88,9 @@ if ($failures.Count -eq 0) {
         "5 Bedrooms",
         "Bedrooms / Office / Playroom / TV Room",
         "Price (up to 2 full bathrooms + guest toilet)",
-        "Additional fee per extra full bathroom",
+        "Estimated time",
         "Full Bathrooms",
-        "This is my first visit (+€30.00, except Move In / Move Out Cleaning)",
+        "This is my first visit",
         "€ 80.00",
         "€ 100.00",
         "€ 130.00",
@@ -100,8 +100,8 @@ if ($failures.Count -eq 0) {
         "€ 300.00",
         "€ 360.00",
         "€ 420.00",
-        "€ 150.00",
-        "€ 230.00",
+        "€ 160.00",
+        "€ 240.00 - € 300.00",
         "€ 480.00",
         "Dusting all accessible surfaces",
         "Deep cleaning of bathrooms and kitchens, including cabinets (exterior)",

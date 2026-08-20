@@ -4,10 +4,10 @@ const serviceCatalog = {
     description: "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
     extraBathroomFee: 30,
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 80.00" },
-      { bedrooms: "3 Bedrooms", price: "€ 100.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 130.00" },
-      { bedrooms: "5 Bedrooms", price: "€ 150.00" }
+      { bedrooms: "2 Bedrooms", price: "€ 80.00 - € 110.00", basePrice: 80, estimatedTime: "1:20 - 1:40" },
+      { bedrooms: "3 Bedrooms", price: "€ 100.00 - € 130.00", basePrice: 100, estimatedTime: "1:30 - 2:00" },
+      { bedrooms: "4 Bedrooms", price: "€ 130.00 - € 160.00", basePrice: 130, estimatedTime: "2:00 - 2:30" },
+      { bedrooms: "5 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" }
     ]
   },
   deep: {
@@ -15,10 +15,10 @@ const serviceCatalog = {
     description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
     extraBathroomFee: 30,
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 140.00" },
-      { bedrooms: "3 Bedrooms", price: "€ 180.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 210.00" },
-      { bedrooms: "5 Bedrooms", price: "€ 230.00" }
+      { bedrooms: "2 Bedrooms", price: "€ 140.00 - € 170.00", basePrice: 140, estimatedTime: "2:20 - 3:00" },
+      { bedrooms: "3 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" },
+      { bedrooms: "4 Bedrooms", price: "€ 210.00 - € 250.00", basePrice: 210, estimatedTime: "3:30 - 4:15" },
+      { bedrooms: "5 Bedrooms", price: "€ 240.00 - € 300.00", basePrice: 240, estimatedTime: "4:00 - 4:30" }
     ]
   },
   move: {
@@ -26,10 +26,10 @@ const serviceCatalog = {
     description: "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
     extraBathroomFee: 0,
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 300.00" },
-      { bedrooms: "3 Bedrooms", price: "€ 360.00" },
-      { bedrooms: "4 Bedrooms", price: "€ 420.00" },
-      { bedrooms: "5 Bedrooms", price: "€ 480.00" }
+      { bedrooms: "2 Bedrooms", price: "€ 300.00", basePrice: 300, estimatedTime: "2:30" },
+      { bedrooms: "3 Bedrooms", price: "€ 360.00", basePrice: 360, estimatedTime: "3:30" },
+      { bedrooms: "4 Bedrooms", price: "€ 420.00", basePrice: 420, estimatedTime: "4:00" },
+      { bedrooms: "5 Bedrooms", price: "€ 480.00", basePrice: 480, estimatedTime: "5:00" }
     ]
   }
 };
@@ -76,7 +76,7 @@ function renderPricing() {
         <td>${service.label}</td>
         <td>${option.bedrooms}</td>
         <td>${option.price}</td>
-        <td>${service.extraBathroomFee ? formatPrice(service.extraBathroomFee) : "—"}</td>
+        <td>${option.estimatedTime}</td>
       </tr>
     `)
   );
@@ -177,17 +177,15 @@ function formatPrice(value) {
 
 function bookingPrice() {
   const option = selectedOption();
-  const basePrice = Number(option.price.replace(/[^0-9.]/g, ""));
+  const basePrice = option.basePrice;
   const extraBathrooms = Math.max(Number(bathroomsSelect.value) - 2, 0);
   const extraBathroomFee = extraBathrooms * selectedService().extraBathroomFee;
-  const firstVisitFee = firstVisitInput.checked && serviceSelect.value !== "move" ? 30 : 0;
 
   return {
     basePrice,
     extraBathrooms,
     extraBathroomFee,
-    firstVisitFee,
-    total: basePrice + extraBathroomFee + firstVisitFee
+    total: basePrice + extraBathroomFee
   };
 }
 
@@ -224,7 +222,6 @@ function updateSummary() {
     <p>Full bathrooms: ${bathroomsSelect.value}</p>
     <p>Base price: ${formatPrice(price.basePrice)}</p>
     ${price.extraBathroomFee ? `<p>Extra bathroom fee (${price.extraBathrooms}): ${formatPrice(price.extraBathroomFee)}</p>` : ""}
-    ${price.firstVisitFee ? `<p>First visit fee: ${formatPrice(price.firstVisitFee)}</p>` : ""}
     <p><strong>Final price: ${formatPrice(price.total)}</strong></p>
     <p>${dateMessage}</p>
     <p>Status after sending: Pending Approval</p>
@@ -294,7 +291,6 @@ function bookingBody() {
     `Base price: ${formatPrice(price.basePrice)}`,
     `Extra bathroom fee: ${formatPrice(price.extraBathroomFee)}`,
     `First visit: ${firstVisitInput.checked ? "Yes" : "No"}`,
-    `First visit fee: ${formatPrice(price.firstVisitFee)}`,
     `Final price: ${formatPrice(price.total)}`,
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
@@ -323,7 +319,6 @@ function bookingFields() {
     base_price: formatPrice(price.basePrice),
     extra_bathroom_fee: formatPrice(price.extraBathroomFee),
     first_visit: firstVisitInput.checked ? "Yes" : "No",
-    first_visit_fee: formatPrice(price.firstVisitFee),
     price: formatPrice(price.total),
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
