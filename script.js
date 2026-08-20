@@ -56,7 +56,6 @@ const pricingRows = document.querySelector("#pricingRows");
 const serviceSelect = document.querySelector("#service");
 const bedroomsSelect = document.querySelector("#bedrooms");
 const bathroomsSelect = document.querySelector("#bathrooms");
-const firstVisitInput = document.querySelector("#firstVisit");
 const timeSelect = document.querySelector("#time");
 const dateInput = document.querySelector("#date");
 const bookingCalendar = document.querySelector("#bookingCalendar");
@@ -290,7 +289,6 @@ function bookingBody() {
     `Full bathrooms: ${fields.get("bathrooms")}`,
     `Base price: ${formatPrice(price.basePrice)}`,
     `Extra bathroom fee: ${formatPrice(price.extraBathroomFee)}`,
-    `First visit: ${firstVisitInput.checked ? "Yes" : "No"}`,
     `Final price: ${formatPrice(price.total)}`,
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
@@ -318,7 +316,6 @@ function bookingFields() {
     full_bathrooms: fields.get("bathrooms"),
     base_price: formatPrice(price.basePrice),
     extra_bathroom_fee: formatPrice(price.extraBathroomFee),
-    first_visit: firstVisitInput.checked ? "Yes" : "No",
     price: formatPrice(price.total),
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
@@ -388,7 +385,6 @@ updateSummary();
 serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
 bathroomsSelect.addEventListener("change", updateSummary);
-firstVisitInput.addEventListener("change", updateSummary);
 dateInput.addEventListener("change", updateSummary);
 bookingCalendar.addEventListener("click", (event) => {
   const navButton = event.target.closest("[data-calendar-nav]");

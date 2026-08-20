@@ -52,8 +52,9 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Please complete the highlighted fields." "booking validation"
     Assert-Contains $all 'id="bathrooms"' "full bathrooms field"
     Assert-Contains $all 'name="bathrooms"' "full bathrooms form value"
-    Assert-Contains $all 'id="firstVisit"' "first visit field"
-    Assert-Contains $all 'name="first_visit"' "first visit form value"
+    if ($all -like '*firstVisit*' -or $all -like '*first_visit*' -or $all -like '*First visit*' -or $all -like '*This is my first visit*') {
+        $failures.Add("First visit fields and references should be removed.")
+    }
     Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
     Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
     Assert-Contains $all "extraBathrooms * selectedService().extraBathroomFee" "extra bathroom price calculation"
@@ -90,7 +91,6 @@ if ($failures.Count -eq 0) {
         "Depending on size of the house/apartment and number of bathrooms",
         "Estimated time",
         "Full Bathrooms",
-        "This is my first visit",
         "€ 80.00",
         "€ 100.00",
         "€ 130.00",
