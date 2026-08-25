@@ -78,8 +78,10 @@ if ($failures.Count -eq 0) {
 
     $requiredContent = @(
         "Standard Cleaning",
+        "Deep Cleaning",
         "Move In / Move Out Cleaning",
         "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
+        "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
         "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
         "2 Bedrooms",
         "3 Bedrooms",
@@ -92,13 +94,17 @@ if ($failures.Count -eq 0) {
         "€ 80.00",
         "€ 100.00",
         "€ 130.00",
+        "€ 140.00",
         "€ 180.00",
+        "€ 210.00",
         "€ 300.00",
         "€ 360.00",
         "€ 420.00",
         "€ 160.00",
+        "€ 240.00 - € 300.00",
         "€ 480.00",
         "Dusting all accessible surfaces",
+        "Deep cleaning of bathrooms and kitchens, including cabinets (exterior)",
         "Interior window cleaning",
         "Inside oven, fridge, and appliances",
         "Removal of construction dust"
@@ -106,10 +112,6 @@ if ($failures.Count -eq 0) {
 
     foreach ($item in $requiredContent) {
         Assert-Contains $all $item "required site content"
-    }
-
-    if ($all -match "Deep Cleaning") {
-        $failures.Add("Deep Cleaning should not appear on the site, booking form, or pricing list")
     }
 }
 
