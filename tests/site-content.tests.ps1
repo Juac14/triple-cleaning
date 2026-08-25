@@ -60,6 +60,10 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
     Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
     Assert-Contains $all 'Property Size (m²)' "property size unit"
+    Assert-Contains $all 'Under 100 m²' "rounded property size range"
+    Assert-Contains $all '100 - 150 m²' "rounded property size range"
+    Assert-Contains $all '250 - 300 m²' "rounded property size range"
+    Assert-Contains $all 'Over 300 m²' "rounded property size range"
     Assert-Contains $all 'Property size: ${fields.get("propertySize")} m²' "property size request message"
     Assert-Contains $all 'property_size_m2: fields.get("propertySize")' "property size Netlify submission"
     if ($all -like '*firstVisitFee*' -or $all -like '*First visit fee*') {
