@@ -52,18 +52,19 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Please complete the highlighted fields." "booking validation"
     Assert-Contains $all 'id="bathrooms"' "full bathrooms field"
     Assert-Contains $all 'name="bathrooms"' "full bathrooms form value"
+    Assert-Contains $all 'id="propertySize"' "property size field"
+    Assert-Contains $all 'name="propertySize"' "property size form value"
     if ($all -like '*firstVisit*' -or $all -like '*first_visit*' -or $all -like '*First visit*' -or $all -like '*This is my first visit*') {
         $failures.Add("First visit fields and references should be removed.")
     }
     Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
     Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
-    Assert-Contains $all "extraBathrooms * selectedService().extraBathroomFee" "extra bathroom price calculation"
-    Assert-Contains $all "extraBathroomFee: 30" "standard and deep extra bathroom fee"
-    Assert-Contains $all "extraBathroomFee: 0" "no extra bathroom fee for move cleaning"
+    Assert-Contains $all 'Property size: ${fields.get("propertySize")} sq ft' "property size request message"
+    Assert-Contains $all 'property_size_sq_ft: fields.get("propertySize")' "property size Netlify submission"
     if ($all -like '*firstVisitFee*' -or $all -like '*First visit fee*') {
         $failures.Add("First visits should not add a fee.")
     }
-    Assert-Contains $all 'Final price: ${formatPrice(price.total)}' "final booking price"
+    Assert-Contains $all 'Estimated price: ${option.price}' "estimated booking price"
     Assert-Contains $all "formStatus" "visible booking status"
     Assert-Contains $all "button" "direct booking button"
     Assert-Contains $all "renderBookingCalendar" "weekend calendar rendering"
@@ -79,16 +80,17 @@ if ($failures.Count -eq 0) {
     $requiredContent = @(
         "Standard Cleaning",
         "Deep Cleaning",
-        "Move In / Move Out Cleaning",
+        "Move In Cleaning (New construction)",
         "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
         "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
-        "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
+        "Complete top-to-bottom cleaning for newly constructed properties before moving in.",
         "2 Bedrooms",
         "3 Bedrooms",
         "4 Bedrooms",
         "5 Bedrooms",
+        "6 Bedrooms",
         "Bedrooms / Office / Playroom / TV Room",
-        "Depending on size of the house/apartment and number of bathrooms",
+        "Price depends on the number of bathrooms, property size, and its current condition.",
         "Estimated time",
         "Full Bathrooms",
         "€ 80.00",
@@ -100,7 +102,10 @@ if ($failures.Count -eq 0) {
         "€ 300.00",
         "€ 360.00",
         "€ 420.00",
-        "€ 160.00",
+        "€ 80.00 - € 120.00",
+        "€ 100.00 - € 150.00",
+        "€ 210.00 - € 270.00",
+        "€ 270.00 - € 330.00",
         "€ 240.00 - € 300.00",
         "€ 480.00",
         "Dusting all accessible surfaces",

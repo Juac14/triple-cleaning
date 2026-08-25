@@ -6,7 +6,7 @@
     <title>Triple Cleaning | Residential Cleaning Services</title>
     <meta
       name="description"
-      content="Triple Cleaning offers Standard Cleaning, Deep Cleaning, and Move In / Move Out Cleaning with weekend booking requests pending approval."
+      content="Triple Cleaning offers Standard Cleaning, Deep Cleaning, and Move In Cleaning for new construction with weekend booking requests pending approval."
     >
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -29,7 +29,7 @@
         <div class="hero-copy">
           <h1>Residential Cleaning Services</h1>
           <p>
-            Reliable standard, deep, and move in/out cleaning for homes that
+            Reliable standard, deep, and new-construction move-in cleaning for homes that
             deserve thoughtful care.
           </p>
           <div class="hero-actions">
@@ -62,8 +62,8 @@
             <p>A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.</p>
           </article>
           <article class="service-card">
-            <h3>Move In / Move Out Cleaning</h3>
-            <p>Complete top-to-bottom cleaning for empty properties before moving in or after moving out.</p>
+            <h3>Move In Cleaning (New construction)</h3>
+            <p>Complete top-to-bottom cleaning for newly constructed properties before moving in.</p>
           </article>
         </div>
       </section>
@@ -79,7 +79,7 @@
               <tr>
                 <th>Service</th>
                 <th>Bedrooms / Office / Playroom / TV Room</th>
-                <th>Depending on size of the house/apartment and number of bathrooms</th>
+                <th>Price depends on the number of bathrooms, property size, and its current condition.</th>
                 <th>Estimated time</th>
               </tr>
             </thead>
@@ -131,8 +131,8 @@
             </ul>
           </article>
           <article>
-            <h3>Move In / Move Out Cleaning</h3>
-            <p>Complete top-to-bottom cleaning for empty properties before moving in or after moving out.</p>
+            <h3>Move In Cleaning (New construction)</h3>
+            <p>Complete top-to-bottom cleaning for newly constructed properties before moving in.</p>
             <ul>
               <li>Full property deep cleaning</li>
               <li>Inside cabinets, drawers, and wardrobes</li>
@@ -184,6 +184,19 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
+                <option value="6+">6+</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="propertySize">Property Size (sq ft)</label>
+              <select id="propertySize" name="propertySize" required>
+                <option value="" selected disabled>Select property size</option>
+                <option value="Under 1,000">Under 1,000</option>
+                <option value="1,000 - 1,499">1,000 - 1,499</option>
+                <option value="1,500 - 1,999">1,500 - 1,999</option>
+                <option value="2,000 - 2,499">2,000 - 2,499</option>
+                <option value="2,500 - 2,999">2,500 - 2,999</option>
+                <option value="3,000+">3,000+</option>
               </select>
             </div>
             <div class="form-row">

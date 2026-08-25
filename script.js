@@ -2,34 +2,33 @@ const serviceCatalog = {
   standard: {
     label: "Standard Cleaning",
     description: "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
-    extraBathroomFee: 30,
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 80.00 - € 110.00", basePrice: 80, estimatedTime: "1:20 - 1:40" },
-      { bedrooms: "3 Bedrooms", price: "€ 100.00 - € 130.00", basePrice: 100, estimatedTime: "1:30 - 2:00" },
-      { bedrooms: "4 Bedrooms", price: "€ 130.00 - € 160.00", basePrice: 130, estimatedTime: "2:00 - 2:30" },
-      { bedrooms: "5 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" }
+      { bedrooms: "2 Bedrooms", price: "€ 80.00 - € 120.00", estimatedTime: "1:20 - 2:00" },
+      { bedrooms: "3 Bedrooms", price: "€ 100.00 - € 150.00", estimatedTime: "1:30 - 2:30" },
+      { bedrooms: "4 Bedrooms", price: "€ 130.00 - € 180.00", estimatedTime: "2:15 - 3:00" },
+      { bedrooms: "5 Bedrooms", price: "€ 180.00 - € 240.00", estimatedTime: "3:00 - 4:00" },
+      { bedrooms: "6 Bedrooms", price: "€ 210.00 - € 270.00", estimatedTime: "3:15 - 4:30" }
     ]
   },
   deep: {
     label: "Deep Cleaning",
     description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
-    extraBathroomFee: 30,
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 140.00 - € 170.00", basePrice: 140, estimatedTime: "2:20 - 3:00" },
-      { bedrooms: "3 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" },
-      { bedrooms: "4 Bedrooms", price: "€ 210.00 - € 250.00", basePrice: 210, estimatedTime: "3:30 - 4:15" },
-      { bedrooms: "5 Bedrooms", price: "€ 240.00 - € 300.00", basePrice: 240, estimatedTime: "4:00 - 4:30" }
+      { bedrooms: "2 Bedrooms", price: "€ 140.00 - € 180.00", estimatedTime: "2:20 - 3:00" },
+      { bedrooms: "3 Bedrooms", price: "€ 180.00 - € 210.00", estimatedTime: "3:00 - 3:30" },
+      { bedrooms: "4 Bedrooms", price: "€ 210.00 - € 250.00", estimatedTime: "3:30 - 4:15" },
+      { bedrooms: "5 Bedrooms", price: "€ 240.00 - € 300.00", estimatedTime: "4:00 - 5:00" },
+      { bedrooms: "6 Bedrooms", price: "€ 270.00 - € 330.00", estimatedTime: "4:30 - 5:30" }
     ]
   },
   move: {
-    label: "Move In / Move Out Cleaning",
-    description: "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
-    extraBathroomFee: 0,
+    label: "Move In Cleaning (New construction)",
+    description: "Complete top-to-bottom cleaning for newly constructed properties before moving in.",
     options: [
-      { bedrooms: "2 Bedrooms", price: "€ 300.00", basePrice: 300, estimatedTime: "2:30" },
-      { bedrooms: "3 Bedrooms", price: "€ 360.00", basePrice: 360, estimatedTime: "3:30" },
-      { bedrooms: "4 Bedrooms", price: "€ 420.00", basePrice: 420, estimatedTime: "4:00" },
-      { bedrooms: "5 Bedrooms", price: "€ 480.00", basePrice: 480, estimatedTime: "5:00" }
+      { bedrooms: "2 Bedrooms", price: "€ 300.00", estimatedTime: "2:30" },
+      { bedrooms: "3 Bedrooms", price: "€ 360.00", estimatedTime: "3:30" },
+      { bedrooms: "4 Bedrooms", price: "€ 420.00", estimatedTime: "4:00" },
+      { bedrooms: "5 Bedrooms", price: "€ 480.00", estimatedTime: "5:00" }
     ]
   }
 };
@@ -56,6 +55,7 @@ const pricingRows = document.querySelector("#pricingRows");
 const serviceSelect = document.querySelector("#service");
 const bedroomsSelect = document.querySelector("#bedrooms");
 const bathroomsSelect = document.querySelector("#bathrooms");
+const propertySizeSelect = document.querySelector("#propertySize");
 const timeSelect = document.querySelector("#time");
 const dateInput = document.querySelector("#date");
 const bookingCalendar = document.querySelector("#bookingCalendar");
@@ -170,24 +170,6 @@ function selectedOption() {
   return selectedService().options.find((option) => option.bedrooms === bedroomsSelect.value);
 }
 
-function formatPrice(value) {
-  return `€ ${value.toFixed(2)}`;
-}
-
-function bookingPrice() {
-  const option = selectedOption();
-  const basePrice = option.basePrice;
-  const extraBathrooms = Math.max(Number(bathroomsSelect.value) - 2, 0);
-  const extraBathroomFee = extraBathrooms * selectedService().extraBathroomFee;
-
-  return {
-    basePrice,
-    extraBathrooms,
-    extraBathroomFee,
-    total: basePrice + extraBathroomFee
-  };
-}
-
 function updateBedroomOptions() {
   bedroomsSelect.innerHTML = selectedService().options
     .map((option) => `<option value="${option.bedrooms}">${option.bedrooms}</option>`)
@@ -208,7 +190,6 @@ function isWeekend(dateValue) {
 function updateSummary() {
   const service = selectedService();
   const option = selectedOption();
-  const price = bookingPrice();
   const dateValue = dateInput.value;
   const dateMessage = dateValue
     ? isWeekend(dateValue)
@@ -219,9 +200,9 @@ function updateSummary() {
   summary.innerHTML = `
     <strong>${service.label} - ${option.bedrooms}</strong>
     <p>Full bathrooms: ${bathroomsSelect.value}</p>
-    <p>Base price: ${formatPrice(price.basePrice)}</p>
-    ${price.extraBathroomFee ? `<p>Extra bathroom fee (${price.extraBathrooms}): ${formatPrice(price.extraBathroomFee)}</p>` : ""}
-    <p><strong>Final price: ${formatPrice(price.total)}</strong></p>
+    <p>Property size: ${propertySizeSelect.value} sq ft</p>
+    <p><strong>Estimated price: ${option.price}</strong></p>
+    <p>Final price depends on the number of bathrooms, property size, and its current condition.</p>
     <p>${dateMessage}</p>
     <p>Status after sending: Pending Approval</p>
   `;
@@ -246,7 +227,7 @@ function markFieldError(fieldId) {
 function validateBookingForm() {
   clearFieldErrors();
   formStatus.className = "form-status";
-  const requiredFields = ["date", "name", "email", "address"];
+  const requiredFields = ["propertySize", "date", "name", "email", "address"];
   const invalidFields = requiredFields.filter((fieldId) => {
     const field = document.querySelector(`#${fieldId}`);
     return !field.value.trim();
@@ -277,7 +258,6 @@ function validateBookingForm() {
 function bookingBody() {
   const service = selectedService();
   const option = selectedOption();
-  const price = bookingPrice();
   const fields = new FormData(form);
 
   return [
@@ -287,9 +267,9 @@ function bookingBody() {
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
     `Full bathrooms: ${fields.get("bathrooms")}`,
-    `Base price: ${formatPrice(price.basePrice)}`,
-    `Extra bathroom fee: ${formatPrice(price.extraBathroomFee)}`,
-    `Final price: ${formatPrice(price.total)}`,
+    `Property size: ${fields.get("propertySize")} sq ft`,
+    `Estimated price: ${option.price}`,
+    "Final price depends on the number of bathrooms, property size, and its current condition.",
     `Preferred date: ${fields.get("date")}`,
     `Preferred time: ${fields.get("time")}`,
     "",
@@ -305,7 +285,6 @@ function bookingBody() {
 function bookingFields() {
   const service = selectedService();
   const option = selectedOption();
-  const price = bookingPrice();
   const fields = new FormData(form);
 
   return {
@@ -314,9 +293,8 @@ function bookingFields() {
     service: service.label,
     bedrooms: option.bedrooms,
     full_bathrooms: fields.get("bathrooms"),
-    base_price: formatPrice(price.basePrice),
-    extra_bathroom_fee: formatPrice(price.extraBathroomFee),
-    price: formatPrice(price.total),
+    property_size_sq_ft: fields.get("propertySize"),
+    estimated_price: option.price,
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
     customer_name: fields.get("name"),
@@ -385,6 +363,7 @@ updateSummary();
 serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
 bathroomsSelect.addEventListener("change", updateSummary);
+propertySizeSelect.addEventListener("change", updateSummary);
 dateInput.addEventListener("change", updateSummary);
 bookingCalendar.addEventListener("click", (event) => {
   const navButton = event.target.closest("[data-calendar-nav]");
