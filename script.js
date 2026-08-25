@@ -22,8 +22,8 @@ const serviceCatalog = {
     ]
   },
   move: {
-    label: "Move In Cleaning (New construction)",
-    description: "Complete top-to-bottom cleaning for newly constructed properties before moving in.",
+    label: "Move-In Cleaning (New Build)",
+    description: "Complete top-to-bottom cleaning for new-build properties before moving in.",
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 300.00", estimatedTime: "2:30" },
       { bedrooms: "3 Bedrooms", price: "€ 360.00", estimatedTime: "3:30" },

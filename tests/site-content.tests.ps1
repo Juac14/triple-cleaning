@@ -88,10 +88,10 @@ if ($failures.Count -eq 0) {
     $requiredContent = @(
         "Standard Cleaning",
         "Deep Cleaning",
-        "Move In Cleaning (New construction)",
+        "Move-In Cleaning (New Build)",
         "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
         "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
-        "Complete top-to-bottom cleaning for newly constructed properties before moving in.",
+        "Complete top-to-bottom cleaning for new-build properties before moving in.",
         "2 Bedrooms",
         "3 Bedrooms",
         "4 Bedrooms",
