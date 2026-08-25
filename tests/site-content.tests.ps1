@@ -59,8 +59,9 @@ if ($failures.Count -eq 0) {
     }
     Assert-Contains $all 'Full bathrooms: ${fields.get("bathrooms")}' "full bathrooms request message"
     Assert-Contains $all 'full_bathrooms: fields.get("bathrooms")' "full bathrooms Netlify submission"
-    Assert-Contains $all 'Property size: ${fields.get("propertySize")} sq ft' "property size request message"
-    Assert-Contains $all 'property_size_sq_ft: fields.get("propertySize")' "property size Netlify submission"
+    Assert-Contains $all 'Property Size (m²)' "property size unit"
+    Assert-Contains $all 'Property size: ${fields.get("propertySize")} m²' "property size request message"
+    Assert-Contains $all 'property_size_m2: fields.get("propertySize")' "property size Netlify submission"
     if ($all -like '*firstVisitFee*' -or $all -like '*First visit fee*') {
         $failures.Add("First visits should not add a fee.")
     }

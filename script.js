@@ -200,7 +200,7 @@ function updateSummary() {
   summary.innerHTML = `
     <strong>${service.label} - ${option.bedrooms}</strong>
     <p>Full bathrooms: ${bathroomsSelect.value}</p>
-    <p>Property size: ${propertySizeSelect.value} sq ft</p>
+    <p>Property size: ${propertySizeSelect.value} m²</p>
     <p><strong>Estimated price: ${option.price}</strong></p>
     <p>Final price depends on the number of bathrooms, property size, and its current condition.</p>
     <p>${dateMessage}</p>
@@ -267,7 +267,7 @@ function bookingBody() {
     `Service: ${service.label}`,
     `Home size: ${option.bedrooms}`,
     `Full bathrooms: ${fields.get("bathrooms")}`,
-    `Property size: ${fields.get("propertySize")} sq ft`,
+    `Property size: ${fields.get("propertySize")} m²`,
     `Estimated price: ${option.price}`,
     "Final price depends on the number of bathrooms, property size, and its current condition.",
     `Preferred date: ${fields.get("date")}`,
@@ -293,7 +293,7 @@ function bookingFields() {
     service: service.label,
     bedrooms: option.bedrooms,
     full_bathrooms: fields.get("bathrooms"),
-    property_size_sq_ft: fields.get("propertySize"),
+    property_size_m2: fields.get("propertySize"),
     estimated_price: option.price,
     preferred_date: fields.get("date"),
     preferred_time: fields.get("time"),
