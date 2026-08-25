@@ -43,9 +43,7 @@ const timeSlots = [
   "13:00",
   "14:00",
   "15:00",
-  "16:00",
-  "17:00",
-  "18:00"
+  "16:00"
 ];
 
 let calendarCursor = new Date();
@@ -242,7 +240,7 @@ function validateBookingForm() {
     invalidFields.slice(1).forEach(markFieldError);
     summary.innerHTML = `
       <strong class="error">Please complete the highlighted fields.</strong>
-      <p class="error">Booking requests are available on Saturday or Sunday, 09:00-18:00.</p>
+      <p class="error">Booking requests are available on Saturday or Sunday, 09:00-16:00.</p>
       <p>Status after sending: Pending Approval</p>
     `;
     requestResult.hidden = true;

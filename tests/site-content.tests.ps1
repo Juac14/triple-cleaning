@@ -79,7 +79,10 @@ if ($failures.Count -eq 0) {
     Assert-Contains $all "Saturday" "weekend availability"
     Assert-Contains $all "Sunday" "weekend availability"
     Assert-Contains $all "09:00" "start time"
-    Assert-Contains $all "18:00" "end time"
+    Assert-Contains $all "16:00" "end time"
+    if ($all -like '*17:00*' -or $all -like '*18:00*') {
+        $failures.Add("Appointment times should end at 16:00.")
+    }
     Assert-Contains $all "Estimated time" "estimated time table heading"
 
     $requiredContent = @(
