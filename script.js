@@ -10,17 +10,6 @@ const serviceCatalog = {
       { bedrooms: "5 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" }
     ]
   },
-  deep: {
-    label: "Deep Cleaning",
-    description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
-    extraBathroomFee: 30,
-    options: [
-      { bedrooms: "2 Bedrooms", price: "€ 140.00 - € 170.00", basePrice: 140, estimatedTime: "2:20 - 3:00" },
-      { bedrooms: "3 Bedrooms", price: "€ 180.00 - € 210.00", basePrice: 180, estimatedTime: "3:00 - 3:30" },
-      { bedrooms: "4 Bedrooms", price: "€ 210.00 - € 250.00", basePrice: 210, estimatedTime: "3:30 - 4:15" },
-      { bedrooms: "5 Bedrooms", price: "€ 240.00 - € 300.00", basePrice: 240, estimatedTime: "4:00 - 4:30" }
-    ]
-  },
   move: {
     label: "Move In / Move Out Cleaning",
     description: "Complete top-to-bottom cleaning for empty properties before moving in or after moving out.",
