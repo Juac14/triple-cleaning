@@ -12,6 +12,8 @@ const serviceCatalog = {
   },
   deep: {
     label: "Deep Cleaning",
+    available: false,
+    availabilityMessage: "No availability at the moment",
     description: "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
     options: [
       { bedrooms: "2 Bedrooms", price: "€ 140.00 - € 180.00", estimatedTime: "2:20 - 3:00" },
@@ -69,8 +71,8 @@ const formStatus = document.querySelector("#formStatus");
 function renderPricing() {
   const rows = Object.values(serviceCatalog).flatMap((service) =>
     service.options.map((option) => `
-      <tr>
-        <td>${service.label}</td>
+      <tr${service.available === false ? ' class="pricing-row-unavailable"' : ""}>
+        <td>${service.available === false ? `<span class="availability-label">${service.availabilityMessage}</span> ${service.label}` : service.label}</td>
         <td>${option.bedrooms}</td>
         <td>${option.price}</td>
         <td>${option.estimatedTime}</td>
@@ -83,7 +85,7 @@ function renderPricing() {
 
 function populateControls() {
   serviceSelect.innerHTML = Object.entries(serviceCatalog)
-    .map(([value, service]) => `<option value="${value}">${service.label}</option>`)
+    .map(([value, service]) => `<option value="${value}"${service.available === false ? " disabled" : ""}>${service.label}${service.available === false ? ` — ${service.availabilityMessage}` : ""}</option>`)
     .join("");
 
   timeSelect.innerHTML = timeSlots

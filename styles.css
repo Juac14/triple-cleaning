@@ -312,6 +312,17 @@ tbody tr:last-child td {
   border-bottom: 0;
 }
 
+.pricing-row-unavailable td,
+.pricing-row-unavailable td:last-child {
+  color: #454545;
+}
+
+.availability-label {
+  display: inline-block;
+  margin-right: 0.35rem;
+  font-weight: 700;
+}
+
 .included-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

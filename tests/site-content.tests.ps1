@@ -84,10 +84,15 @@ if ($failures.Count -eq 0) {
         $failures.Add("Appointment times should end at 16:00.")
     }
     Assert-Contains $all "Estimated time" "estimated time table heading"
+    Assert-Contains $script 'available: false' "Deep Cleaning unavailable state"
+    Assert-Contains $script 'service.available === false ? " disabled"' "disabled Deep Cleaning form option"
+    Assert-Contains $styles ".pricing-row-unavailable td" "unavailable pricing row styling"
+    Assert-Contains $styles "color: #454545" "dark gray unavailable pricing text"
 
     $requiredContent = @(
         "Standard Cleaning",
         "Deep Cleaning",
+        "No availability at the moment",
         "Move-In Cleaning (New Build)",
         "Regular maintenance cleaning to keep your home fresh, tidy, and comfortable.",
         "A more detailed and intensive cleaning focused on built-up dirt and hard-to-reach areas.",
