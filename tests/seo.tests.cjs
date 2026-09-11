@@ -1,0 +1,26 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const build = env => spawnSync(process.execPath, ['tools/build-seo.cjs', '--publish'], {
+  cwd: root, env: { ...process.env, SITE_URL: '', URL: '', ...env }, encoding: 'utf8'
+});
+assert.notEqual(build({}).status, 0, 'Publishing must reject a missing domain');
+assert.notEqual(build({ SITE_URL: 'http://example.com' }).status, 0, 'Require HTTPS');
+const result = build({ SITE_URL: 'https://example.com', URL: 'https://fallback.netlify.app' });
+assert.equal(result.status, 0, result.stderr);
+const html = fs.readFileSync(path.join(root, 'dist/index.html'), 'utf8');
+assert.equal((html.match(/rel="canonical"/g) || []).length, 1);
+assert.ok(html.includes('rel="canonical" href="https://example.com/"'));
+assert.ok(!html.includes('fallback.netlify.app'));
+assert.equal((html.match(/<h1>/g) || []).length, 1);
+assert.equal((html.match(/<tbody id="pricingRows">([\s\S]*?)<\/tbody>/)[1].match(/<tr/g) || []).length, 14);
+const data = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+assert.equal(data.url, 'https://example.com/');
+assert.equal(data.telephone, '+353892721358');
+assert.equal(data.hasOfferCatalog.itemListElement.length, 2, 'Unavailable service must not be offered');
+assert.ok(fs.readFileSync(path.join(root, 'dist/robots.txt'), 'utf8').includes('Sitemap: https://example.com/sitemap.xml'));
+assert.ok(fs.readFileSync(path.join(root, 'dist/sitemap.xml'), 'utf8').includes('<loc>https://example.com/</loc>'));
+assert.ok(!fs.existsSync(path.join(root, 'dist/tests')), 'Only site assets should be published');
+console.log('SEO production build checks passed (test domain only, no deployment).');

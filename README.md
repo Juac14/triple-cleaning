@@ -8,7 +8,7 @@ Open `index.html` in a browser.
 
 ## Publish
 
-The site can be published as a static site on Netlify or GitHub Pages.
+Netlify builds the site with `node tools/build-seo.cjs --publish` and publishes `dist/`. For a custom domain, configure `SITE_URL` with the official HTTPS origin. See [SEO maintenance](docs/seo.md) for indexing, domain configuration and validation.
 
 ## Booking Flow
 
