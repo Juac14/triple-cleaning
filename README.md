@@ -8,7 +8,7 @@ Open `index.html` in a browser.
 
 ## Publish
 
-Netlify builds the site with `node tools/build-seo.cjs --publish` and publishes `dist/`. For a custom domain, configure `SITE_URL` with the official HTTPS origin. See [SEO maintenance](docs/seo.md) for indexing, domain configuration and validation.
+Netlify builds the site with `node tools/build-seo.cjs --publish` and publishes `dist/`. The official domain defaults to `https://triplecleaning.ie/`. The service area is Celbridge and nearby homes within approximately a 10-minute drive. See [SEO maintenance](docs/seo.md) for indexing, domain configuration and validation.
 
 ## Booking Flow
 

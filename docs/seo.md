@@ -4,11 +4,12 @@ The source HTML contains all service checklists, FAQs, contact details and price
 
 ## Production domain
 
-Netlify runs `node tools/build-seo.cjs --publish` and publishes only `dist/`. Set the Netlify environment variable `SITE_URL` to the official HTTPS origin when using a custom domain (no path, query or fragment). Otherwise the build uses Netlify's `URL`, the site's main production URL, rather than a preview URL. The build generates a consistent canonical link, social metadata, organization URL, `robots.txt` and `sitemap.xml`. Publishing fails if no production origin is available. For other hosts, set `SITE_URL`, run the same build and upload `dist/`.
+The official domain is `https://triplecleaning.ie/`. Netlify runs `node tools/build-seo.cjs --publish` and publishes only `dist/`. Both source generation and production builds use this domain by default, independently of Netlify preview URLs. Only set `SITE_URL` if the official domain changes (HTTPS origin with no path, query or fragment). The build generates a consistent canonical link, social metadata, organization URL, `robots.txt` and `sitemap.xml`. For other hosts, run the same build and upload `dist/`.
+
+The confirmed service area is Celbridge and nearby homes within approximately a 10-minute drive, subject to address and availability confirmation. This is represented in visible content and Organization/Service structured data. Travel time is not converted to a fixed kilometre radius or an unconfirmed list of towns.
 
 ## Follow-up required from the business owner
 
-- Confirm the official domain and actual cities/regions served. Add those locations naturally to visible content before describing them in structured data. Do not claim an unverified service area or invent an address.
 - Verify the production domain in Google Search Console, submit `/sitemap.xml`, and inspect the homepage URL to request indexing. Verification needs the owner's Google/DNS access.
 - Create or complete the Google Business Profile with accurate service areas, phone, hours and website. Request honest reviews from real customers.
 - Review Search Console impressions, clicks and search terms over time. Indexing, ranking and traffic gains are not guaranteed by these code changes.
@@ -17,6 +18,6 @@ Organization markup currently uses only known business information. LocalBusines
 
 ## Validation
 
-Run `powershell -ExecutionPolicy Bypass -File tests/site-content.tests.ps1` and `node tests/seo.tests.cjs`. The SEO test builds ignored `dist/` files using `https://example.com` for assertions; do not upload that test output. Rebuild with the real production environment before publishing. After deployment, check the live homepage canonical, `/robots.txt`, `/sitemap.xml`, and the Search Console URL Inspection result.
+Run `powershell -ExecutionPolicy Bypass -File tests/site-content.tests.ps1` and `node tests/seo.tests.cjs`. The SEO test checks the official domain, service area and a temporary domain override, then restores `dist/` to the official domain. After deployment, check the live homepage canonical, `/robots.txt`, `/sitemap.xml`, and the Search Console URL Inspection result.
 
 References: [Google canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [business details](https://developers.google.com/search/docs/appearance/establish-business-details).

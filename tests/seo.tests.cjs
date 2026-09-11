@@ -6,7 +6,10 @@ const root = path.resolve(__dirname, '..');
 const build = env => spawnSync(process.execPath, ['tools/build-seo.cjs', '--publish'], {
   cwd: root, env: { ...process.env, SITE_URL: '', URL: '', ...env }, encoding: 'utf8'
 });
-assert.notEqual(build({}).status, 0, 'Publishing must reject a missing domain');
+assert.equal(build({ URL: 'https://preview.netlify.app' }).status, 0);
+const productionHtml = fs.readFileSync(path.join(root, 'dist/index.html'), 'utf8');
+assert.ok(productionHtml.includes('rel="canonical" href="https://triplecleaning.ie/"'), 'Use the official domain even on Netlify previews');
+assert.ok(!productionHtml.includes('preview.netlify.app'));
 assert.notEqual(build({ SITE_URL: 'http://example.com' }).status, 0, 'Require HTTPS');
 const result = build({ SITE_URL: 'https://example.com', URL: 'https://fallback.netlify.app' });
 assert.equal(result.status, 0, result.stderr);
@@ -19,8 +22,11 @@ assert.equal((html.match(/<tbody id="pricingRows">([\s\S]*?)<\/tbody>/)[1].match
 const data = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
 assert.equal(data.url, 'https://example.com/');
 assert.equal(data.telephone, '+353892721358');
+assert.equal(data.areaServed.name, 'Celbridge and nearby areas within approximately a 10-minute drive');
+assert.ok(html.includes('<h1>Residential Cleaning Services in Celbridge</h1>'));
 assert.equal(data.hasOfferCatalog.itemListElement.length, 2, 'Unavailable service must not be offered');
 assert.ok(fs.readFileSync(path.join(root, 'dist/robots.txt'), 'utf8').includes('Sitemap: https://example.com/sitemap.xml'));
 assert.ok(fs.readFileSync(path.join(root, 'dist/sitemap.xml'), 'utf8').includes('<loc>https://example.com/</loc>'));
 assert.ok(!fs.existsSync(path.join(root, 'dist/tests')), 'Only site assets should be published');
-console.log('SEO production build checks passed (test domain only, no deployment).');
+assert.equal(build({}).status, 0, 'Restore output to the official domain after override tests');
+console.log('SEO production build checks passed, including official domain and service area.');

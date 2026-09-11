@@ -4,7 +4,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const publish = process.argv.includes('--publish');
-const configuredUrl = process.env.SITE_URL || process.env.URL;
+const configuredUrl = process.env.SITE_URL || 'https://triplecleaning.ie';
 let origin;
 if (configuredUrl) {
   const url = new URL(configuredUrl);
@@ -13,7 +13,6 @@ if (configuredUrl) {
   }
   origin = url.origin;
 }
-if (publish && !origin) throw new Error('Set SITE_URL to the official domain (Netlify URL is used as a fallback).');
 const script = fs.readFileSync(path.join(root, 'script.js'), 'utf8');
 const catalog = vm.runInNewContext(script.split('const contactEmail')[0] + '\nserviceCatalog', {}, { timeout: 1000 });
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
@@ -25,19 +24,21 @@ const rows = Object.values(catalog).flatMap(service => service.options.map(optio
 const organization = {
   '@context': 'https://schema.org', '@type': 'Organization',
   name: 'Triple Cleaning', email: 'triplecleaning.info@gmail.com', telephone: '+353892721358',
-  description: 'Residential standard cleaning and new-build move-in cleaning. Weekend appointment requests are subject to confirmation.',
+  description: 'Residential cleaning in Celbridge and nearby homes within approximately a 10-minute drive. Weekend appointment requests are subject to confirmation.',
+  areaServed: { '@type': 'Place', name: 'Celbridge and nearby areas within approximately a 10-minute drive' },
   ...(origin ? { url: origin + '/', logo: origin + '/assets/logo-cropped.png' } : {}),
   hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Residential Cleaning Services',
     itemListElement: Object.values(catalog).filter(service => service.available !== false).map(service => ({
       '@type': 'OfferCatalog', name: service.label,
-      itemListElement: [{ '@type': 'Service', name: service.label, description: service.description }]
+      itemListElement: [{ '@type': 'Service', name: service.label, description: service.description,
+        areaServed: { '@type': 'Place', name: 'Celbridge and nearby areas within approximately a 10-minute drive' } }]
     })) }
 };
 let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 html = html.replace(/<tbody id="pricingRows">[\s\S]*?<\/tbody>/, `<tbody id="pricingRows">${rows}\n            </tbody>`);
 const metadata = `<script type="application/ld+json">\n${JSON.stringify(organization, null, 2)}\n    </script>`;
 html = html.replace(/<!-- SEO:STRUCTURED_DATA -->|<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => metadata);
-html = html.replace(/\n    <!-- SEO:URLS:START -->[\s\S]*?<!-- SEO:URLS:END -->/, '');
+html = html.replace(/\s*<!-- SEO:URLS:START -->[\s\S]*?<!-- SEO:URLS:END -->\s*/, '\n  ');
 if (origin) {
   html = html.replace('</head>', `<!-- SEO:URLS:START -->
     <link rel="canonical" href="${escape(origin)}/">
@@ -63,4 +64,4 @@ if (publish) {
   fs.writeFileSync(path.join(output, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`);
   fs.writeFileSync(path.join(output, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${escape(origin)}/</loc></url></urlset>\n`);
 }
-console.log(`SEO HTML generated; ${Object.values(catalog).reduce((n, s) => n + s.options.length, 0)} price rows. ${publish ? 'Production files: dist/' : 'Domain metadata is generated at deployment.'}`);
+console.log(`SEO HTML generated for ${origin}; ${Object.values(catalog).reduce((n, s) => n + s.options.length, 0)} price rows. ${publish ? 'Production files: dist/' : 'Source HTML refreshed.'}`);
