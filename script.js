@@ -47,6 +47,10 @@ const timeSlots = [
   "15:00",
   "16:00"
 ];
+const fullyBookedDates = new Set([
+  "2026-10-24",
+  "2026-10-31"
+]);
 
 let calendarCursor = new Date();
 calendarCursor.setDate(1);
@@ -126,9 +130,10 @@ function renderBookingCalendar() {
     const date = new Date(year, month, day);
     const value = formatDateValue(date);
     const weekend = isWeekend(value);
+    const fullyBooked = isFullyBooked(value);
     const past = date < today;
     const selected = dateInput.value === value;
-    const disabled = !weekend || past;
+    const disabled = !weekend || past || fullyBooked;
     const classes = ["calendar-day"];
 
     if (selected) {
@@ -137,6 +142,15 @@ function renderBookingCalendar() {
     if (disabled) {
       classes.push("disabled");
     }
+    if (fullyBooked) {
+      classes.push("fully-booked");
+    }
+
+    const availabilityLabel = fullyBooked
+      ? " fully booked"
+      : disabled
+        ? " unavailable"
+        : " available";
 
     cells.push(`
       <button
@@ -144,8 +158,9 @@ function renderBookingCalendar() {
         type="button"
         data-date="${value}"
         ${disabled ? "disabled" : ""}
-        aria-label="${value}${disabled ? " unavailable" : " available"}"
-      >${day}</button>
+        aria-label="${value}${availabilityLabel}"
+        ${fullyBooked ? 'title="Fully booked"' : ""}
+      ><span>${day}</span>${fullyBooked ? '<span class="fully-booked-label">Fully booked</span>' : ""}</button>
     `);
   }
 
@@ -187,14 +202,24 @@ function isWeekend(dateValue) {
   return day === 0 || day === 6;
 }
 
+function isFullyBooked(dateValue) {
+  return fullyBookedDates.has(dateValue);
+}
+
+function isBookableDate(dateValue) {
+  return isWeekend(dateValue) && !isFullyBooked(dateValue);
+}
+
 function updateSummary() {
   const service = selectedService();
   const option = selectedOption();
   const dateValue = dateInput.value;
   const dateMessage = dateValue
-    ? isWeekend(dateValue)
-      ? `Preferred date: ${dateValue}`
-      : "Please choose a Saturday or Sunday."
+    ? isFullyBooked(dateValue)
+      ? "That date is fully booked. Please choose another Saturday or Sunday."
+      : isWeekend(dateValue)
+        ? `Preferred date: ${dateValue}`
+        : "Please choose a Saturday or Sunday."
     : "Choose a preferred Saturday or Sunday.";
 
   summary.innerHTML = `
@@ -233,7 +258,7 @@ function validateBookingForm() {
     return !field.value.trim();
   });
 
-  if (dateInput.value && !isWeekend(dateInput.value)) {
+  if (dateInput.value && !isBookableDate(dateInput.value)) {
     invalidFields.push("date");
   }
 

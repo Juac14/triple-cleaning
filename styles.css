@@ -523,6 +523,26 @@ textarea {
   background: transparent;
 }
 
+.calendar-day.fully-booked {
+  display: flex;
+  min-height: 48px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-color: #d9b9b2;
+  background: #f7e8e5;
+  color: #7d3026;
+  opacity: 1;
+}
+
+.fully-booked-label {
+  font-size: 0.52rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .calendar-day.empty {
   border-color: transparent;
   background: transparent;
