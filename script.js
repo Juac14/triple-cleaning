@@ -51,6 +51,7 @@ const fullyBookedDates = new Set([
   "2026-10-24"
 ]);
 const saturdayScheduleStart = "2026-10-31";
+const october31TimeSlots = ["15:30"];
 const saturdayTimeSlots = ["12:30", "15:30"];
 const sundayTimeSlots = ["09:30"];
 
@@ -119,6 +120,10 @@ function timeSlotsForDate(dateValue) {
 
   const day = new Date(`${dateValue}T00:00:00`).getDay();
 
+  if (dateValue === saturdayScheduleStart) {
+    return october31TimeSlots;
+  }
+
   if (day === 0) {
     return sundayTimeSlots;
   }
@@ -132,6 +137,10 @@ function timeSlotsForDate(dateValue) {
 
 function scheduleLabel(dateValue) {
   const slots = timeSlotsForDate(dateValue);
+
+  if (slots === october31TimeSlots) {
+    return "15:30 only";
+  }
 
   if (slots === sundayTimeSlots) {
     return "09:30 only";
