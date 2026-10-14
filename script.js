@@ -50,9 +50,9 @@ const timeSlots = [
 const fullyBookedDates = new Set([
   "2026-10-24"
 ]);
-const limitedAvailability = {
-  "2026-10-31": ["15:30"]
-};
+const saturdayScheduleStart = "2026-10-31";
+const saturdayTimeSlots = ["12:30", "15:30"];
+const sundayTimeSlots = ["09:30"];
 
 let calendarCursor = new Date();
 calendarCursor.setDate(1);
@@ -100,7 +100,7 @@ function populateControls() {
 }
 
 function updateTimeOptions() {
-  const availableSlots = limitedAvailability[dateInput.value] || timeSlots;
+  const availableSlots = timeSlotsForDate(dateInput.value);
   const previousSelection = timeSelect.value;
 
   timeSelect.innerHTML = availableSlots
@@ -110,6 +110,38 @@ function updateTimeOptions() {
   if (availableSlots.includes(previousSelection)) {
     timeSelect.value = previousSelection;
   }
+}
+
+function timeSlotsForDate(dateValue) {
+  if (!dateValue) {
+    return timeSlots;
+  }
+
+  const day = new Date(`${dateValue}T00:00:00`).getDay();
+
+  if (day === 0) {
+    return sundayTimeSlots;
+  }
+
+  if (day === 6 && dateValue >= saturdayScheduleStart) {
+    return saturdayTimeSlots;
+  }
+
+  return timeSlots;
+}
+
+function scheduleLabel(dateValue) {
+  const slots = timeSlotsForDate(dateValue);
+
+  if (slots === sundayTimeSlots) {
+    return "09:30 only";
+  }
+
+  if (slots === saturdayTimeSlots) {
+    return "12:30 / 15:30";
+  }
+
+  return "";
 }
 
 function formatDateValue(date) {
@@ -143,7 +175,8 @@ function renderBookingCalendar() {
     const value = formatDateValue(date);
     const weekend = isWeekend(value);
     const fullyBooked = isFullyBooked(value);
-    const limited = Boolean(limitedAvailability[value]);
+    const limitedLabel = scheduleLabel(value);
+    const limited = Boolean(limitedLabel);
     const past = date < today;
     const selected = dateInput.value === value;
     const disabled = !weekend || past || fullyBooked;
@@ -165,7 +198,7 @@ function renderBookingCalendar() {
     const availabilityLabel = fullyBooked
       ? " fully booked"
       : limited
-        ? " available only at 15:30"
+        ? ` available at ${limitedLabel.replace(" only", "")}`
       : disabled
         ? " unavailable"
         : " available";
@@ -178,8 +211,8 @@ function renderBookingCalendar() {
         ${disabled ? "disabled" : ""}
         aria-label="${value}${availabilityLabel}"
         ${fullyBooked ? 'title="Fully booked"' : ""}
-        ${limited ? 'title="Available only at 15:30"' : ""}
-      ><span>${day}</span>${fullyBooked ? '<span class="calendar-status-label">Fully booked</span>' : ""}${limited ? '<span class="calendar-status-label">15:30 only</span>' : ""}</button>
+        ${limited ? `title="Available at ${limitedLabel.replace(" only", "")}"` : ""}
+      ><span>${day}</span>${fullyBooked ? '<span class="calendar-status-label">Fully booked</span>' : ""}${limited ? `<span class="calendar-status-label">${limitedLabel}</span>` : ""}</button>
     `);
   }
 
@@ -279,6 +312,10 @@ function validateBookingForm() {
 
   if (dateInput.value && !isBookableDate(dateInput.value)) {
     invalidFields.push("date");
+  }
+
+  if (dateInput.value && !timeSlotsForDate(dateInput.value).includes(timeSelect.value)) {
+    invalidFields.push("time");
   }
 
   if (invalidFields.length > 0) {
