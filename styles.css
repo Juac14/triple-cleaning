@@ -536,7 +536,19 @@ textarea {
   opacity: 1;
 }
 
-.fully-booked-label {
+.calendar-day.limited-availability {
+  display: flex;
+  min-height: 48px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-color: var(--gold);
+  background: var(--soft);
+  color: var(--gold-dark);
+}
+
+.calendar-status-label {
   font-size: 0.52rem;
   font-weight: 700;
   line-height: 1;

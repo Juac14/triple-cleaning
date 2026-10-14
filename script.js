@@ -48,9 +48,11 @@ const timeSlots = [
   "16:00"
 ];
 const fullyBookedDates = new Set([
-  "2026-10-24",
-  "2026-10-31"
+  "2026-10-24"
 ]);
+const limitedAvailability = {
+  "2026-10-31": ["15:30"]
+};
 
 let calendarCursor = new Date();
 calendarCursor.setDate(1);
@@ -92,12 +94,22 @@ function populateControls() {
     .map(([value, service]) => `<option value="${value}"${service.available === false ? " disabled" : ""}>${service.label}${service.available === false ? ` — ${service.availabilityMessage}` : ""}</option>`)
     .join("");
 
-  timeSelect.innerHTML = timeSlots
+  updateTimeOptions();
+  renderBookingCalendar();
+  updateBedroomOptions();
+}
+
+function updateTimeOptions() {
+  const availableSlots = limitedAvailability[dateInput.value] || timeSlots;
+  const previousSelection = timeSelect.value;
+
+  timeSelect.innerHTML = availableSlots
     .map((slot) => `<option value="${slot}">${slot}</option>`)
     .join("");
 
-  renderBookingCalendar();
-  updateBedroomOptions();
+  if (availableSlots.includes(previousSelection)) {
+    timeSelect.value = previousSelection;
+  }
 }
 
 function formatDateValue(date) {
@@ -131,6 +143,7 @@ function renderBookingCalendar() {
     const value = formatDateValue(date);
     const weekend = isWeekend(value);
     const fullyBooked = isFullyBooked(value);
+    const limited = Boolean(limitedAvailability[value]);
     const past = date < today;
     const selected = dateInput.value === value;
     const disabled = !weekend || past || fullyBooked;
@@ -145,9 +158,14 @@ function renderBookingCalendar() {
     if (fullyBooked) {
       classes.push("fully-booked");
     }
+    if (limited) {
+      classes.push("limited-availability");
+    }
 
     const availabilityLabel = fullyBooked
       ? " fully booked"
+      : limited
+        ? " available only at 15:30"
       : disabled
         ? " unavailable"
         : " available";
@@ -160,7 +178,8 @@ function renderBookingCalendar() {
         ${disabled ? "disabled" : ""}
         aria-label="${value}${availabilityLabel}"
         ${fullyBooked ? 'title="Fully booked"' : ""}
-      ><span>${day}</span>${fullyBooked ? '<span class="fully-booked-label">Fully booked</span>' : ""}</button>
+        ${limited ? 'title="Available only at 15:30"' : ""}
+      ><span>${day}</span>${fullyBooked ? '<span class="calendar-status-label">Fully booked</span>' : ""}${limited ? '<span class="calendar-status-label">15:30 only</span>' : ""}</button>
     `);
   }
 
@@ -389,7 +408,10 @@ serviceSelect.addEventListener("change", updateBedroomOptions);
 bedroomsSelect.addEventListener("change", updateSummary);
 bathroomsSelect.addEventListener("change", updateSummary);
 propertySizeSelect.addEventListener("change", updateSummary);
-dateInput.addEventListener("change", updateSummary);
+dateInput.addEventListener("change", () => {
+  updateTimeOptions();
+  updateSummary();
+});
 bookingCalendar.addEventListener("click", (event) => {
   const navButton = event.target.closest("[data-calendar-nav]");
   const dateButton = event.target.closest("[data-date]");
@@ -402,6 +424,7 @@ bookingCalendar.addEventListener("click", (event) => {
 
   if (dateButton && !dateButton.disabled) {
     dateInput.value = dateButton.dataset.date;
+    updateTimeOptions();
     renderBookingCalendar();
     updateSummary();
   }
